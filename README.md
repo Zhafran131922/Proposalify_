@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -71,3 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 # proposalify_
 # proposalify__
 # Proposalify0
+=======
+# proposalify
+>>>>>>> 519b3e40a0cf2ca1522922a69ba8bf2500542759
+# proposalify12
