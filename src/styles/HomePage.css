@@ -1,0 +1,59 @@
+/* Navbar */
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+}
+
+.logo a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+}
+
+.menu li {
+  margin-right: 20px;
+}
+
+.menu li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.auth-buttons {
+  display: flex;
+}
+
+.auth-buttons a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+/* Content */
+.content {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.generator-button button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.generator-button button:hover {
+  background-color: #0056b3;
+}
