@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap');
+
+.font-micro5 {
+  font-family: 'Micro 5', sans-serif;
+}
