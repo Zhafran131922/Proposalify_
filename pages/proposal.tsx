@@ -1,7 +1,7 @@
-import Navbar from '../components/Navbar';
-import HomePageContent from '../components/HomePageContent';
+import Navbar from '../../../components/Navbar';
+import HomePageContent from '../../../components/HomePageContent';
 import '../styles/globals.css';
-import ProposalPage from '../components/ProposalPage';
+import ProposalPage from '../../../components/ProposalPage';
 import { motion } from 'framer-motion';
 
 const HomePage = () => {

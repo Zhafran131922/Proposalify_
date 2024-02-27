@@ -42,10 +42,12 @@ const Navbar = () => {
     </motion.div>
   )}
   {/* Menu */}
-  <ul className="flex items-center space-x-4 text-black mr-20 ml-auto">
+  <ul className="flex items-center justify-center space-x-4 text-black">
     {/* Menu items */}
     <motion.li
-      whileHover={{ scale: 1.1, fontWeight: "bold" }}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.1, fontWeight: "bold", cursor: 'pointer' }}
       whileTap={{ scale: 0.9 }}
       onMouseEnter={() => setIsAboutHovered(true)}
       onMouseLeave={() => setIsAboutHovered(false)}
@@ -53,33 +55,52 @@ const Navbar = () => {
       About
     </motion.li>
     <motion.li
-      whileHover={{ scale: 1.1, fontWeight: "bold" }}
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.1, fontWeight: "bold", cursor: 'pointer' }}
       whileTap={{ scale: 0.9 }}
       onMouseEnter={() => setIsContactHovered(true)}
       onMouseLeave={() => setIsContactHovered(false)}
     >
       Contact Us
     </motion.li>
+  </ul>
+  <ul className="flex items-center space-x-4 text-black">
     <motion.li
-      whileHover={{ backgroundColor: "blue", scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      onMouseEnter={() => setIsLoginHovered(true)}
-      onMouseLeave={() => setIsLoginHovered(false)}
-      className="hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out rounded w-100 h-100"
-    >
-      Login
-    </motion.li>
-    {/* Tombol Sign Up */}
-    <motion.li
-      whileHover={{ backgroundColor: "blue", scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      onMouseEnter={() => setIsSignupHovered(true)}
-      onMouseLeave={() => setIsSignupHovered(false)}
-      className="hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out rounded"
-    >
-      Sign Up
-    </motion.li>
-    {/* ... */}
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  whileHover={{ 
+    backgroundColor: "#1A91F0", 
+    transition: { duration: 0.1 } // Mengurangi durasi transisi menjadi 0.1 detik
+  }}
+  whileTap={{ scale: 0.9 }}
+  onMouseEnter={() => setIsLoginHovered(true)}
+  onMouseLeave={() => setIsLoginHovered(false)}
+  className={`hover:text-white transition duration-300 ease-in-out rounded ${
+    isLoginHovered ? 'bg-blue-500' : ''
+  }`}
+  style={{ padding: isLoginHovered ? '10px 20px' : '6px 16px', cursor: 'pointer' }} // Menyesuaikan padding saat di-hover
+>
+  <Link href="/login">Login</Link>
+</motion.li>
+
+<motion.li
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  whileHover={{ 
+    backgroundColor: "#1A91F0", 
+    transition: { duration: 0.1 } // Mengurangi durasi transisi menjadi 0.1 detik
+  }}
+  whileTap={{ scale: 0.9 }}
+  onMouseEnter={() => setIsSignupHovered(true)}
+  onMouseLeave={() => setIsSignupHovered(false)}
+  className={`hover:text-white transition duration-300 ease-in-out rounded ${
+    isSignupHovered ? 'bg-blue-500' : ''
+  }`}
+  style={{ padding: isSignupHovered ? '10px 20px' : '6px 16px', cursor: 'pointer' }} // Menyesuaikan padding saat di-hover
+>
+  <Link href="/signup">Sign Up</Link>
+</motion.li>
   </ul>
 </nav>
 
