@@ -6,9 +6,17 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [numberPhone, setNumberPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [ulangiPassword, setUlangiPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [numberPhoneError, setNumberPhoneError] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = (e : React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(numberPhone.length !== 11) {
+      setNumberPhoneError("No. Hp yang anda masukan kurang dari 11 digit")
+    } else {
+        setNumberPhoneError("");
+    }
+    
     // Implement registration logic using Firebase auth.createUserWithEmailAndPassword
   };
 
@@ -44,9 +52,13 @@ const Register = () => {
           type="number"
           placeholder="08575272912"
           value={numberPhone}
-          onChange={(e) => setNumberPhone(e.target.value)}
+          onChange={(e) => {
+            setNumberPhone(e.target.value);
+            setNumberPhoneError("");
+          }}
           className="mt-1 p-2 border rounded-md w-full"
           />
+          {numberPhoneError && <h6 className="text-gray-500 text-sm">{numberPhoneError}</h6>}
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -62,15 +74,15 @@ const Register = () => {
           />
         </div>
         <div>
-          <label htmlFor="ulangiPassword" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="repeatPassword" className="block text-sm font-medium text-gray-700">
             Ulangi Password
           </label>
           <input
             id="ulangiPassword"
             type="password"
             placeholder="******"
-            value={password}
-            onChange={(e) => setUlangiPassword(e.target.value)}
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
             className="mt-1 p-2 border rounded-md w-full mb-10"
           />
         </div>
