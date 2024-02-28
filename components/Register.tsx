@@ -4,9 +4,19 @@ import AuthButton from "./AuthButton";
 
 const Register = () => {
   const [email, setEmail] = useState("");
+  const [numberPhone, setNumberPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [numberPhoneError, setNumberPhoneError] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = (e : React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(numberPhone.length !== 11) {
+      setNumberPhoneError("No. Hp yang anda masukan kurang dari 11 digit")
+    } else {
+        setNumberPhoneError("");
+    }
+    
     // Implement registration logic using Firebase auth.createUserWithEmailAndPassword
   };
 
@@ -18,7 +28,9 @@ const Register = () => {
       transition={{ duration: 0.5 }}
       className="max-w-md mx-auto mt-16 p-6 bg-white rounded shadow-md"
     >
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
+      <h1 className="text-4xl font-semibold mb-6 text-center">Selamat Datang di
+        Proposalify</h1>
+        <p className="text-center font-medium mb-3 text-sm">Sudah Punya Akun? Login</p>
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -27,11 +39,26 @@ const Register = () => {
           <input
             id="email"
             type="email"
-            placeholder="Email"
+            placeholder="example@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 p-2 w-full border rounded-md"
           />
+        </div>
+        <div>
+          <label htmlFor="numberPhone" className="block text-sm font-medium text-gray-600">No. HP</label>
+          <input
+          id="numberPhone"
+          type="number"
+          placeholder="08575272912"
+          value={numberPhone}
+          onChange={(e) => {
+            setNumberPhone(e.target.value);
+            setNumberPhoneError("");
+          }}
+          className="mt-1 p-2 border rounded-md w-full"
+          />
+          {numberPhoneError && <h6 className="text-gray-500 text-sm">{numberPhoneError}</h6>}
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
@@ -40,17 +67,30 @@ const Register = () => {
           <input
             id="password"
             type="password"
-            placeholder="Password"
+            placeholder="******"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 p-2 w-full border rounded-md"
           />
         </div>
+        <div>
+          <label htmlFor="repeatPassword" className="block text-sm font-medium text-gray-700">
+            Ulangi Password
+          </label>
+          <input
+            id="ulangiPassword"
+            type="password"
+            placeholder="******"
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            className="mt-1 p-2 border rounded-md w-full mb-10"
+          />
+        </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300"
+          className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300 w-full"
         >
-          Register
+          Daftar
         </button>
       </form>
       <div className="mt-4">
