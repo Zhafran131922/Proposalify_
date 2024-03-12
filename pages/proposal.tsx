@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import Navbar from '../components/Navbar';
-=======
-import Navbar from "../components/Navbar";
->>>>>>> 00d7741e321f8bf3294a6a1fe9a32fe56bea65a2
 import HomePageContent from '../components/HomePageContent';
 import '../styles/globals.css';
 import ProposalPage from '../components/ProposalPage';

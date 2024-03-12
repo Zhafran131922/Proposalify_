@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router"; // Import useHistory
 import AuthButton from "./AuthButton";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore'; // Import firestore module
+
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -8,6 +13,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [numberPhoneError, setNumberPhoneError] = useState("");
+  const router = useRouter(); 
 
   const handleRegister = (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -15,10 +21,44 @@ const Register = () => {
       setNumberPhoneError("No. Hp yang anda masukan kurang dari 11 digit")
     } else {
         setNumberPhoneError("");
+        history.push("/proposal");
     }
     
     // Implement registration logic using Firebase auth.createUserWithEmailAndPassword
   };
+
+  
+
+// File Register.tsx
+
+// Frontend code (misalnya, dalam React component)
+const handleGoogleSignIn = async () => {
+  try {
+    // Lakukan sign-in dengan Google di frontend
+    const result = await firebase.auth().signInWithPopup(googleProvider);
+    const googleIdToken = await result.user?.getIdToken();
+
+    // Kirim token Google ID ke backend untuk registrasi
+    const response = await fetch('http://localhost:3000/api/auth/registerWithGoogle', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        idToken: googleIdToken,
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error('Error during Google sign-in:', error);
+  }
+};
+
+
+// Gunakan fungsi handleGoogleSignIn di dalam form atau sebagai opsi registrasi
+
 
   return (
     <motion.div
@@ -73,25 +113,32 @@ const Register = () => {
             className="mt-1 p-2 w-full border rounded-md"
           />
         </div>
-        <div>
-          <label htmlFor="repeatPassword" className="block text-sm font-medium text-gray-700">
-            Ulangi Password
-          </label>
-          <input
-            id="ulangiPassword"
-            type="password"
-            placeholder="******"
-            value={repeatPassword}
-            onChange={(e) => setRepeatPassword(e.target.value)}
-            className="mt-1 p-2 border rounded-md w-full mb-10"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition duration-300 w-full"
-        >
-          Daftar
-        </button>
+          <div>
+            <label htmlFor="repeatPassword" className="block text-sm font-medium text-gray-700">
+              Ulangi Password
+            </label>
+            <input
+              id="repeatPassword"
+              type="password"
+              placeholder="******"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              className="mt-1 p-2 border rounded-md w-full mb-10"
+            />
+          </div>
+
+          <button
+              onClick={handleGoogleSignIn}
+              className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300 w-full mt-4"
+            >
+              Daftar dengan Google
+            </button>
+            <button
+    type="submit"
+    className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300 w-full mt-4"
+  >
+    Daftar
+  </button>
       </form>
       <div className="mt-4">
       <AuthButton />

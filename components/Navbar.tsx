@@ -1,12 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { signOut } from 'firebase/auth';
+import { useAuth } from "@/app/AuthContext";
+import UserProfileMenu from './UserProfileMenu';
+ 
 
 const Navbar = () => {
   const [isAboutHovered, setIsAboutHovered] = useState(false);
   const [isContactHovered, setIsContactHovered] = useState(false);
   const [isLoginHovered, setIsLoginHovered] = useState(false);
   const [isSignupHovered, setIsSignupHovered] = useState(false);
+  const { user, signOutUser, userProfileIcon } = useAuth();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleLogin = () => {
+      console.log(`Pengguna ${user.displayName} telah login.`);
+      // Lakukan sesuatu saat pengguna login
+      // Misalnya, perbarui state aplikasi, muat data, dll.
+    };
+  
+    const handleLogout = () => {
+      console.log('Tidak ada pengguna yang login.');
+      // Lakukan sesuatu saat pengguna logout
+      // Misalnya, kembali ke halaman beranda, reset state, dll.
+    };
+  
+    // Cek apakah pengguna sedang login atau tidak
+    if (user) {
+      handleLogin();
+    } else {
+      handleLogout();
+    }
+  }, [user]);
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
+  };
+  
 
   return (
 <nav className="relative flex items-center justify-between bg-white p-4">
@@ -41,6 +75,14 @@ const Navbar = () => {
       <p className="text-black">Teks untuk Contact Us</p>
     </motion.div>
   )}
+        {user && (
+        <div>
+          <FontAwesomeIcon icon={faUser} className="text-black" />
+          <span className="text-black">{user.displayName}</span>
+        </div>
+      )}
+    
+
   {/* Menu */}
   <ul className="flex items-center justify-center space-x-4 text-black">
     {/* Menu items */}
@@ -102,6 +144,29 @@ const Navbar = () => {
   <Link href="/signup">Sign Up</Link>
 </motion.li>
   </ul>
+      {/* Profile Icon */}
+      <div className="relative">
+        <div
+          className="cursor-pointer"
+          onClick={toggleProfileMenu}
+          onMouseEnter={() => setIsLoginHovered(true)}
+          onMouseLeave={() => setIsLoginHovered(false)}
+        >
+          {userProfileIcon || <FontAwesomeIcon icon={faUser} className="text-black text-xl" />}
+        </div>
+        {isProfileMenuOpen && (
+          <motion.div
+            className="absolute right-0 mt-2 bg-white border rounded shadow-md"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            {/* Add your profile menu items here */}
+            <UserProfileMenu />
+          </motion.div>
+        )}
+      </div>
+
 </nav>
 
 

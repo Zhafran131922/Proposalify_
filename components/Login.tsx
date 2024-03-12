@@ -11,9 +11,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   // AuthButton component
   const handleLogin = () => {
-    setTimeout(() => {
-      router.push("/proposal");
-    }, 1000);
+    const userHomePage = '/proposal'; // Tentukan halaman yang ingin Anda arahkan setelah login berhasil
+    router.push(userHomePage);
   };
 
   return (
