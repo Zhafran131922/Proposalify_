@@ -1,3 +1,5 @@
+//adminController.js
+
 const Proposal = require('../models/Proposal');
 const Dosen = require('../models/Dosen');
 const SubmittedProposal = require('../models/SubmittedProposal');
@@ -26,6 +28,25 @@ exports.sendProposalToDosen = async (req, res) => {
         await dosen.save();
 
         res.status(200).json({ message: 'Proposal sent to dosen successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getProposalsForDosen = async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        // Temukan dosen berdasarkan username
+        const dosen = await Dosen.findOne({ username });
+        if (!dosen) {
+            return res.status(404).json({ message: 'Dosen not found' });
+        }
+
+        // Ambil daftar proposal yang sudah dikirimkan ke dosen
+        const submittedProposals = dosen.submittedProposals;
+
+        res.status(200).json({ submittedProposals });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

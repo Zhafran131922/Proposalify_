@@ -7,6 +7,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const adminRoutes = require('./routes/adminRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const reviewProposalRoutes = require('./routes/reviewProposalRoutes');
+const historyRoutes = require('./routes/historyRoutes');
+
+
 // const authenticateUser = require('./middleware/authenticateUser');
 
 const authenticateUser = (req, res, next) => {
@@ -55,7 +60,9 @@ app.use('/api/proposals', proposalRoutes);
 app.use('/api/users', userRoutes);
 app.post('/api/admin/register-dosen', authController.registerDosen);
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/admin/review-proposal', reviewRoutes);
+app.use('/api/review-proposal', reviewProposalRoutes);
+app.use('/api/history', historyRoutes);
 
 
 // Error handling middleware

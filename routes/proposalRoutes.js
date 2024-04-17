@@ -62,7 +62,7 @@ router.post('/send-proposal-to-admin', async (req, res) => {
         });
         await submittedProposal.save();
 
-        res.status(200).json({ message: 'Proposal berhasil dikirim ke administrator' });
+        res.status(200).json({ message: 'Proposal berhasil dikirim ke administratorsss' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -100,6 +100,99 @@ router.post('/send-proposal-to-dosen', async (req, res) => {
   } catch (error) {
       res.status(500).json({ message: error.message });
   }
+});
+
+// routes/proposalRoutes.js
+
+// Endpoint untuk mendapatkan proposal yang disimpan oleh user
+router.get('/saved-proposals/:user_id', async (req, res) => {
+    try {
+        const { user_id } = req.params;
+
+        // Temukan proposal yang disimpan oleh user berdasarkan user_id
+        const savedProposals = await Proposal.find({ user_id });
+
+        res.status(200).json(savedProposals);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Endpoint untuk mendapatkan proposal yang sudah dikirim ke administrator dari user
+router.get('/submitted-proposals/:user_id', async (req, res) => {
+    try {
+        const { user_id } = req.params;
+
+        // Temukan proposal yang sudah dikirim ke administrator dari user berdasarkan user_id
+        const submittedProposals = await SubmittedProposal.find({ user_id });
+
+        res.status(200).json(submittedProposals);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/:proposalId', async (req, res) => {
+    try {
+        const proposalId = req.params.proposalId;
+        // Temukan proposal dari database berdasarkan proposal ID
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: 'Proposal not found' });
+        }
+        // Kirim data proposal yang ditemukan sebagai respons
+        res.status(200).json(proposal);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Endpoint untuk mengedit isi proposal berdasarkan ID proposal
+router.put('/:proposalId', async (req, res) => {
+    try {
+        const { title, background, deskripsiUsaha, penutup, lampiran } = req.body;
+        const proposalId = req.params.proposalId;
+
+        // Temukan proposal dari database berdasarkan ID
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: 'Proposal not found' });
+        }
+
+        // Lakukan update isi proposal
+        proposal.title = title;
+        proposal.background = background;
+        proposal.deskripsiUsaha = deskripsiUsaha;
+        proposal.penutup = penutup;
+        proposal.lampiran = lampiran;
+
+        // Simpan proposal yang telah diubah
+        await proposal.save();
+
+        res.status(200).json({ message: 'Proposal updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Endpoint untuk menghapus proposal berdasarkan ID
+router.delete('/:proposalId', async (req, res) => {
+    try {
+        const proposalId = req.params.proposalId;
+
+        // Cari proposal berdasarkan ID
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: 'Proposal not found' });
+        }
+
+        // Hapus proposal dari basis data
+        await Proposal.findByIdAndDelete(proposalId);
+
+        res.status(200).json({ message: 'Proposal deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
 
