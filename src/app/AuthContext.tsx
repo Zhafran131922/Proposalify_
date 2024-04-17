@@ -1,7 +1,7 @@
 // context/AuthContext.tsx
 
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User, signOut } from 'firebase/auth';
 import app from '@/app/firebase';
 import DefaultProfileIcon from '../../components/DefaultProfileIcon';
 
@@ -11,7 +11,8 @@ interface AuthContextProps {
 
 interface AuthContextValue {
   user: User | null;
-  userProfileIcon: React.ReactNode; // Tambahkan prop untuk ikon profil
+  userProfileIcon: React.ReactNode;
+  signOutUser: () => Promise<void>; // Tambahkan properti signOutUser
 }
 
 const auth = getAuth(app);
@@ -37,11 +38,14 @@ export function AuthProvider({ children }: AuthContextProps) {
     return () => unsubscribe();
   }, []);
   
-  
+  const signOutUser = async () => {
+    await signOut(auth);
+  };
 
   const contextValue: AuthContextValue = {
     user,
     userProfileIcon,
+    signOutUser, 
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
