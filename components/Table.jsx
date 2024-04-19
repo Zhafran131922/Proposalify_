@@ -70,7 +70,7 @@ const TABLE_ROWS = [
  
 function ProposalTable() {
   return (
-    <Card className="h-full w-11/12 rounded-lg mt-10">
+    <Card className="w-11/12 rounded-lg mt-10 ">
         
       <CardBody>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -81,7 +81,7 @@ function ProposalTable() {
       </CardHeader>
         </div>
   
-        <table className=" w-full min-w-max table-auto text-left">
+        <table className=" w-full text-left">
           <thead>
             <tr>
               {TABLE_HEAD.map((head) => (
