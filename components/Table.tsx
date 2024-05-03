@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ShareIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import Link from 'next/link';
 import {
   Card,
   CardHeader,
@@ -16,8 +17,7 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
- 
- 
+
 const TABLE_HEAD = ["Nama", "Judul Proposal", "Status", "Tanggal", ""];
  
 const TABLE_ROWS = [
@@ -170,11 +170,14 @@ function ProposalTable() {
                     </td>
                     <td className={classes}>
                       <Tooltip content="Edit User">
-                        <IconButton variant="text">
-                          <ShareIcon className="h-4 w-4" />
-                        </IconButton>
+                        <Link href="/search">
+                          <IconButton variant="text">
+                            <ShareIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                     </td>
+
                   </tr>
                 );
               },
