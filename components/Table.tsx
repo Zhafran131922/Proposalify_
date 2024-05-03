@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { ShareIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -171,7 +171,7 @@ function ProposalTable() {
                     <td className={classes}>
                       <Tooltip content="Edit User">
                         <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
+                          <ShareIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
                     </td>
