@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic'; // Import dynamic from next/dynamic
 import ProposalForm from '../components/ProposalForm';
+import ManualForm from '../components/ManualForm';
 import LivePreview from '../components/LivePreview';
-import Main from '../components/ProposalForm/main';
-
 
 // Import components with dynamic import for server-side rendering
 // const LivePreview = dynamic(() => import('../components/LivePreview'));
@@ -45,16 +44,8 @@ const ProposalPage = () => {
     </div>
 
     <div className="w-1/2 p-8">
-        <ProposalForm
-          proposalData={proposalData}
-          onChange={(fieldName, value) => setProposalData({ ...proposalData, [fieldName]: value })}
-          onSubmit={handleSubmit}
-          onAdditionalDataChange={(data) => setAdditionalData(data)}
-          onAdditionalDataChange2={(data) => setAdditionalData2(data)} // Mendefinisikan onAdditionalDataChange2
-        />
+        <ManualForm/>
       </div>
-
-
       
     </div>
   );

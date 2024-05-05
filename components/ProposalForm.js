@@ -14,7 +14,6 @@ const ProposalForm = ({ proposalData, onChange, onSubmit, onAdditionalDataChange
   const [imagesUploadedBackground, setImagesUploadedBackground] = useState(false);
   const [additionalFormData, setAdditionalFormData] = useState([]); 
   const [showAdditionalForm, setShowAdditionalForm] = useState(false);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -116,33 +115,6 @@ const ProposalForm = ({ proposalData, onChange, onSubmit, onAdditionalDataChange
       }
     }
   };
-
-
-  // const handleImageUploadBackground = (event) => {
-  //   const files = event.target.files;
-  //   const newImages = [];
-  
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-  
-  //     if (file.type.startsWith('image/')) {
-  //       const reader = new FileReader();
-  //       reader.onload = () => {
-  //         const imageSource = reader.result;
-  
-  //         newImages.push(imageSource);
-  
-  //         if (newImages.length === files.length) {
-  //           setUploadedImagesBackground((prevImages) => [...prevImages, ...newImages]);
-  //         }
-  //       };
-  
-  //       reader.readAsDataURL(file);
-  //     } else {
-  //       console.error('Invalid image format');
-  //     }
-  //   }
-  // };
 
   const handleImageUploadDeskripsiUsaha = (event) => {
     const files = event.target.files;
@@ -563,9 +535,6 @@ const ProposalForm = ({ proposalData, onChange, onSubmit, onAdditionalDataChange
       yPos += 10; // Add additional space after the New Field text
     });
 
-
-
-  
     doc.save('proposal.pdf');
   };
   
@@ -884,6 +853,8 @@ const ProposalForm = ({ proposalData, onChange, onSubmit, onAdditionalDataChange
       >
         Submit Proposal
       </motion.button>
+
+
 
     </form>
   );
