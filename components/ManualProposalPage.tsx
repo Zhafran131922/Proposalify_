@@ -1,52 +1,30 @@
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic'; // Import dynamic from next/dynamic
-import ProposalForm from '../components/ProposalForm';
-import ManualForm from '../components/ManualForm';
-import LivePreview from '../components/LivePreview';
-
-// Import components with dynamic import for server-side rendering
-// const LivePreview = dynamic(() => import('../components/LivePreview'));
-// const ProposalForm = dynamic(() => import('../components/ProposalForm'));
+import ManualForm from './ManualForm';
+import LivePreview2 from './LivePreview2';
 
 const ProposalPage = () => {
   const [proposalData, setProposalData] = useState({
-    judul: '',
-    latarbelakang: '',
-    deskripsiusaha: '',
-    penutup: '',
-    lampiran: '',
+    judulProposal: '',
+    latarBelakang: '',
+    forms: [],
   });
 
-  // Handler to update proposal data
-  const handleProposalDataChange = (fieldName, value) => {
-    setProposalData({ ...proposalData, [fieldName]: value });
-  };
-
-  const [additionalData, setAdditionalData] = useState([]);
-  const [additionalData2, setAdditionalData2] = useState([]);
-
-  // Handler to submit proposal
-  const handleSubmit = () => {
-    // Logic to submit proposal
-    // Example: Send proposalData to server or generate PDF
-  };
+  const [previewData, setPreviewData] = useState({
+    judulProposal: '',
+    latarBelakang: '',
+    forms: [],
+  });
 
   return (
     <div className="flex">
-    <div className="w-1/2 p-8">
-    <LivePreview
-          proposalData={proposalData}
-          uploadedImagesBackground={proposalData.uploadedImagesBackground}
-          uploadedImagesDeskripsiUsaha={proposalData.uploadedImagesDeskripsiUsaha}
-          additionalData={additionalData}
-          additionalData2={additionalData2} // Menambahkan properti additionalData2
-        />
-    </div>
-
-    <div className="w-1/2 p-8">
-        <ManualForm/>
+      <div className="w-1/2 p-8">
+        {/* Menampilkan LivePreview2 dan meneruskan preview data */}
+        <LivePreview2 formData={previewData} />
       </div>
-      
+      <div className="w-1/2 p-8">
+        {/* Menampilkan ManualForm dan meneruskan setProposalData dan setPreviewData sebagai props */}
+        <ManualForm setProposalData={setProposalData} setPreviewData={setPreviewData} />
+      </div>
     </div>
   );
 };
