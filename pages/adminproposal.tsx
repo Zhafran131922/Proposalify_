@@ -17,9 +17,14 @@ const AdminPage = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                         <Card title="20" content="Proposal Masuk" />
                         <Card title="15" content="Proposal dalam tahap review" />
+                       
                     </div>
+                   
                     <div>
+                        <div style = {{ justifyContent: 'space-around' }}>
                         <Table/>
+                        </div>
+                       
                     </div>
                 </div>
             </div>

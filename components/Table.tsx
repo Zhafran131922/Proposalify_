@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { ShareIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import Link from 'next/link';
 import {
   Card,
   CardHeader,
@@ -16,8 +17,7 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
- 
- 
+
 const TABLE_HEAD = ["Nama", "Judul Proposal", "Status", "Tanggal", ""];
  
 const TABLE_ROWS = [
@@ -70,7 +70,7 @@ const TABLE_ROWS = [
  
 function ProposalTable() {
   return (
-    <Card className="h-full w-11/12 rounded-lg mt-10">
+    <Card className="w-11/12 rounded-lg mt-10 ">
         
       <CardBody>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -81,7 +81,7 @@ function ProposalTable() {
       </CardHeader>
         </div>
   
-        <table className=" w-full min-w-max table-auto text-left">
+        <table className=" w-full text-left">
           <thead>
             <tr>
               {TABLE_HEAD.map((head) => (
@@ -170,11 +170,14 @@ function ProposalTable() {
                     </td>
                     <td className={classes}>
                       <Tooltip content="Edit User">
-                        <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
+                        <Link href="/search">
+                          <IconButton variant="text">
+                            <ShareIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                     </td>
+
                   </tr>
                 );
               },

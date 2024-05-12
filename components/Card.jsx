@@ -11,7 +11,7 @@ import { CardHeader } from "react-bootstrap";
 function SimpleCard({ title, content }) {
     return (
       
-        <Card className="w-96 h-20 rounded-md bg-white drop-shadow-sm p-1 ">
+        <Card className="w-96 rounded-md bg-white drop-shadow-sm p-2">
            
             
                 <div className="flex justify-between items-center">
