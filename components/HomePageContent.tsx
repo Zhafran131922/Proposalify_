@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
+
+
 const HomePageContent = () => {
   const [text, setText] = useState('');
   const [sentences, setSentences] = useState([
@@ -42,7 +44,7 @@ const HomePageContent = () => {
         {text}
       </motion.h1>
       <p className="text-lg mb-8 mt-10 font-nunito">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <Link href="/proposal">
+      <Link href="/manualproposal">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

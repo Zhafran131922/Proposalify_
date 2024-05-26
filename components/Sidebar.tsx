@@ -4,6 +4,7 @@ import Link from 'next/link';
 import BookIcon from '../public/book.png';
 import Rekapitulasi from '../public/rekapitulasi.png';
 import Setting from '../public/setting.png';
+
 import {
     Card,
     List,

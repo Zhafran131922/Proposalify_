@@ -6,6 +6,8 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from 'firebase/auth';
 import { useAuth } from "@/app/AuthContext";
 import UserProfileMenu from './UserProfileMenu';
+import Logo from '../images/logo.png'
+import Image from 'next/image';
  
 
 const Navbar = () => {
@@ -19,17 +21,13 @@ const Navbar = () => {
   useEffect(() => {
     const handleLogin = () => {
       console.log(`Pengguna ${user.displayName} telah login.`);
-      // Lakukan sesuatu saat pengguna login
-      // Misalnya, perbarui state aplikasi, muat data, dll.
     }; 
   
     const handleLogout = () => {
       console.log('Tidak ada pengguna yang login.');
-      // Lakukan sesuatu saat pengguna logout
-      // Misalnya, kembali ke halaman beranda, reset state, dll.
+
     };
-  
-    // Cek apakah pengguna sedang login atau tidak
+
     if (user) {
       handleLogin();
     } else {
@@ -49,7 +47,7 @@ const Navbar = () => {
   {/* Logo */}
   <div className="flex items-center">
   <Link href="/">
-      <img src="/logo.png" alt="Logo" className="h-20 mr-2 ml-20" />
+      <Image src={Logo} alt="Logo" className="h-20 w-16 mr-2 ml-20" />
   </Link>
   <span className="text-black font-semibold text-lg">Proposalify</span>
 </div>

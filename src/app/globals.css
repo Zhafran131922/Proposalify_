@@ -34,7 +34,7 @@ body {
 
 @media screen and (max-width: 2560px) {
   .max-w-form {
-    max-width: 80rem; /* Ubah nilai ini sesuai kebutuhan */
+    max-width: 80rem; 
   }
   
 
@@ -43,3 +43,18 @@ body {
     width: 100%;
   }
 }
+
+.text-justify {
+  text-align: justify;
+}
+
+
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
