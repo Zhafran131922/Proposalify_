@@ -14,7 +14,6 @@ const dosenSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // Tambahkan bidang lain sesuai kebutuhan
 });
 
 const Dosen = mongoose.model('Dosen', dosenSchema);

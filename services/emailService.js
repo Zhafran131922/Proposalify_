@@ -1,14 +1,11 @@
-// emailService.js
 const transporter = require('./emailConfig');
 const nodemailer = require('nodemailer');
 
 async function sendProposalNotification(email) {
-    // Pastikan email penerima tidak kosong atau tidak ditentukan
     if (!email) {
         throw new Error('No recipient email defined');
     }
 
-    // Konfigurasi email
     const mailOptions = {
         from: 'proposalify01@gmail.com',
         to: email,
@@ -16,7 +13,6 @@ async function sendProposalNotification(email) {
         text: 'Dear Dosen,\n\nA new proposal has been submitted for your review.\n\nBest regards,\nProposalify Team'
     };
 
-    // Kirim email
     try {
         await transporter.sendMail(mailOptions);
         console.log('Email notification sent to dosen:', email);

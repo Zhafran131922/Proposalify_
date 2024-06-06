@@ -1,21 +1,9 @@
-// models/ReviewProposal.js
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const reviewProposalSchema = new mongoose.Schema({
-  proposal: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Proposal',
-    required: true
-  },
-  review: {
-    title: String,
-    background: String,
-    deskripsiUsaha: String,
-    penutup: String,
-    lampiran: String
-  }
-}, { timestamps: true });
+const ReviewProposalSchema = new Schema({
+    proposal: { type: Schema.Types.ObjectId, ref: 'Proposal', required: true },
+    komentar: { type: String, required: true }
+});
 
-const ReviewProposal = mongoose.model('ReviewProposal', reviewProposalSchema);
-
-module.exports = ReviewProposal;
+module.exports = mongoose.model('ReviewProposal', ReviewProposalSchema);

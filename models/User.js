@@ -1,5 +1,3 @@
-// User.js
-
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -18,7 +16,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     role: {
-        type: String, // Ubah tipe data menjadi String
+        type: String, 
         required: true
     }
 });

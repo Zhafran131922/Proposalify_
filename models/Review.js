@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema({
     },
     proposal: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Proposal', // Merujuk ke model Proposal
+        ref: 'Proposal', 
         required: true
     }
 });

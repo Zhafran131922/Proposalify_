@@ -1,9 +1,7 @@
-// services/reviewNotificationService.js
 const transporter = require('./emailConfig');
 
 async function sendReviewNotification(proposalId) {
-  // Lakukan query ke database atau API untuk mendapatkan email pemilik proposal berdasarkan proposalId
-  const email = 'contoh@example.com'; // Ganti dengan cara Anda mendapatkan email user
+  const email = 'contoh@example.com'; 
   const mailOptions = {
     from: 'proposalify01@gmail.com',
     to: email,

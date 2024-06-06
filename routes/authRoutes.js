@@ -1,5 +1,3 @@
-// authRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -8,31 +6,22 @@ const jwt = require('jsonwebtoken');
 const authController = require('../controllers/authController');
 const roleMiddleware = require('../middleware/roleMiddleware');
 
-
-
-// Endpoint untuk registrasi pengguna
 router.post('/register/admin', async (req, res) => {
     try {
         const { username, email, password, role } = req.body;
-
-        // Periksa apakah pengguna sudah terdaftar
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email sudah terdaftar' });
         }
 
-        // Enkripsi password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Buat pengguna baru
         const user = new User({
             username,
             email,
             password: hashedPassword,
-            role // Pastikan role disetel sesuai dengan "administrator"
+            role 
         });
-
-        // Simpan pengguna baru ke dalam basis data
         await user.save();
 
         res.status(201).json({ message: 'Pendaftaran berhasil' });
@@ -44,24 +33,20 @@ router.post('/login/admin', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Cari pengguna berdasarkan alamat email
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: 'Email atau kata sandi salah' });
         }
 
-        // Verifikasi kata sandi
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Email atau kata sandi salah' });
         }
 
-        // Periksa apakah pengguna memiliki peran sebagai administrator
         if (user.role !== 'administrator') {
             return res.status(403).json({ message: 'Akses ditolak: Hanya administrator yang dapat login' });
         }
 
-        // Buat token JWT
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.status(200).json({ message: 'Login berhasil', token });
@@ -74,16 +59,12 @@ router.post('/register/user', async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Periksa apakah pengguna sudah terdaftar
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email sudah terdaftar' });
         }
 
-        // Enkripsi password
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Buat pengguna baru dengan role "user"
         const user = new User({
             username,
             email,
@@ -91,7 +72,6 @@ router.post('/register/user', async (req, res) => {
             role: "user"
         });
 
-        // Simpan pengguna baru ke dalam basis data
         await user.save();
 
         res.status(201).json({ message: 'Pendaftaran berhasil' });
@@ -100,31 +80,21 @@ router.post('/register/user', async (req, res) => {
     }
 });
 
-
-
-// Endpoint untuk login pengguna role "user"
 router.post('/login/user', async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        // Cari pengguna berdasarkan alamat email
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ message: 'Email atau kata sandi salah' });
         }
-
-        // Verifikasi kata sandi
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Email atau kata sandi salah' });
         }
 
-        // Periksa apakah pengguna memiliki peran sebagai user
         if (user.role !== 'user') {
             return res.status(403).json({ message: 'Akses ditolak: Hanya user yang dapat login' });
         }
-
-        // Buat token JWT
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.status(200).json({ message: 'Login berhasil', token });

@@ -1,5 +1,3 @@
-// authController.js
-
 const authService = require('../services/authService');
 const User = require('../models/User');
 const Dosen = require('../models/Dosen');
@@ -25,13 +23,10 @@ exports.login = async (req, res) => {
 
 exports.registerDosen = async (req, res) => {
     try {
-        // Dapatkan data akun dosen dari body permintaan
         const { nama, email, password } = req.body;
 
-        // Buat instansiasi objek Dosen
         const dosen = new Dosen({ nama, email, password });
 
-        // Simpan data dosen ke dalam MongoDB
         await dosen.save();
 
         res.status(201).json({ message: 'Akun dosen berhasil ditambahkan' });
@@ -42,8 +37,20 @@ exports.registerDosen = async (req, res) => {
 
 exports.sendProposalToDosen = async (req, res) => {
     try {
-        // Lakukan logika pengiriman proposal ke dosen di sini
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+exports.getRegisteredDosens = async (req, res) => {
+    try {
+        const dosens = await Dosen.find();
+
+        res.status(200).json(dosens);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+

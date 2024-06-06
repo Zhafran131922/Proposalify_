@@ -1,7 +1,5 @@
-// services/emailConfig.js
 const nodemailer = require('nodemailer');
 
-// Konfigurasi transporter untuk menggunakan Gmail
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {

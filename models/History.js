@@ -1,4 +1,3 @@
-// models/History.js
 const mongoose = require('mongoose');
 
 const historySchema = new mongoose.Schema({

@@ -10,7 +10,25 @@ const adminRoutes = require('./routes/adminRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const reviewProposalRoutes = require('./routes/reviewProposalRoutes');
 const historyRoutes = require('./routes/historyRoutes');
+const proposalController = require('./controllers/proposalController');
 
+
+const multer = require('multer');
+
+// Konfigurasi penyimpanan file dengan multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // Tentukan direktori penyimpanan file gambar
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    // Tentukan nama file yang disimpan (misalnya: tanggal saat ini + nama file asli)
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+});
+
+// Buat instance multer dengan konfigurasi penyimpanan
+const upload = multer({ storage: storage });
 
 // const authenticateUser = require('./middleware/authenticateUser');
 
@@ -63,15 +81,14 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin/review-proposal', reviewRoutes);
 app.use('/api/review-proposal', reviewProposalRoutes);
 app.use('/api/history', historyRoutes);
+app.post('/api/send-proposal', proposalController.sendProposalHandler);
+app.use('/api/admin', adminRoutes);
 
-
-// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Internal server error' });
 });
 
-// Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

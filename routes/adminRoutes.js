@@ -6,6 +6,8 @@ const Proposal = require('../models/Proposal');
 const Dosen = require('../models/Dosen');
 const sendProposalNotification = require('../services/emailService');
 const ReviewController = require('../controllers/reviewController');
+// const { authenticateUser } = require('../middleware/authMiddleware');
+const { authenticateAdmin } = require('../middleware/authMiddleware');
 
 // Endpoint untuk mengirimkan proposal ke email dosen
 router.post('/send-proposal-to-dosen', async (req, res) => {
@@ -18,22 +20,18 @@ router.post('/send-proposal-to-dosen', async (req, res) => {
             return res.status(404).json({ message: 'Proposal not found' });
         }
 
-        // Temukan dosen dari database "dosens" berdasarkan email
         const dosen = await Dosen.findOne({ email: dosen_email });
         if (!dosen) {
             return res.status(404).json({ message: 'Dosen not found' });
         }
 
-        // Pastikan bahwa dosen memiliki properti proposals dan inisialisasi jika belum ada
         if (!dosen.proposals) {
             dosen.proposals = [];
         }
 
-        // Kirim proposal ke dosen
         dosen.proposals.push(proposal);
         await dosen.save();
 
-        // Kirim email notifikasi ke dosen
         await sendProposalNotification(dosen_email);
 
         res.status(200).json({ message: 'Proposal sent to dosen successfullyyyyy' });
@@ -46,13 +44,11 @@ router.get('/proposals/dosen/:username', async (req, res) => {
     try {
         const { username } = req.params;
 
-        // Temukan dosen berdasarkan username
         const dosen = await Dosen.findOne({ username });
         if (!dosen) {
             return res.status(404).json({ message: 'Dosen not found' });
         }
 
-        // Temukan daftar proposal yang dikirimkan ke dosen
         const proposals = await Proposal.find({ _id: { $in: dosen.proposals } });
 
         res.status(200).json({ proposals });
@@ -61,11 +57,35 @@ router.get('/proposals/dosen/:username', async (req, res) => {
     }
 });
 
-// Endpoint untuk dosen menerima proposal untuk direview
+router.get('/dosens', async (req, res) => {
+    try {
+        const dosens = await Dosen.find();
+        
+        res.status(200).json({ dosens });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.delete('/dosens/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deletedDosen = await Dosen.findByIdAndDelete(id);
+
+        if (!deletedDosen) {
+            return res.status(404).json({ message: 'Akun dosen tidak ditemukan' });
+        }
+
+        res.status(200).json({ message: 'Akun dosen berhasil dihapus', deletedDosen });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 router.post('/review-proposal', ReviewController.reviewProposal);
 
-// Endpoint untuk mendapatkan daftar proposal yang harus direview oleh seorang dosen
 router.get('/proposals/:username', adminController.getProposalsForDosen);
-
 
 module.exports = router;
