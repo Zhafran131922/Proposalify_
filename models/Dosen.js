@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const dosenSchema = new mongoose.Schema({
     nama: {
@@ -14,6 +15,10 @@ const dosenSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    bidangKeahlian: {
+        type: String,
+        required: true
+    }
 });
 
 const Dosen = mongoose.model('Dosen', dosenSchema);

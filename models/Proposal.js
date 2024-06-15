@@ -16,14 +16,8 @@ const proposalSchema = new mongoose.Schema({
                 required: true
             },
             isi: {
-                teks: {
-                    type: String,
-                    required: true
-                },
-                gambar: {
-                    type: String, // Path to the image file
-                    required: false
-                }
+                type: String, 
+                required: true
             }
         }
     ]

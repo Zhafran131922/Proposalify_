@@ -23,9 +23,9 @@ exports.login = async (req, res) => {
 
 exports.registerDosen = async (req, res) => {
     try {
-        const { nama, email, password } = req.body;
+        const { nama, email, password, bidangKeahlian } = req.body;
 
-        const dosen = new Dosen({ nama, email, password });
+        const dosen = new Dosen({ nama, email, password, bidangKeahlian });
 
         await dosen.save();
 
@@ -34,6 +34,7 @@ exports.registerDosen = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.sendProposalToDosen = async (req, res) => {
     try {

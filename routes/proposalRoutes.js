@@ -33,28 +33,14 @@ router.post('/upload', upload.single('gambar'), (req, res, next) => {
     res.status(201).json({ message: 'File uploaded successfully', path: file.path });
   });
 
-  router.post('/proposals', upload.array('gambar', 10), async (req, res) => {
+  router.post('/proposals', async (req, res) => {
     try {
-        const { user_id, judul } = req.body;
-        const formulirs = JSON.parse(req.body.formulirs); 
-
-
-        const gambarFiles = req.files;
-
-        const formulirArray = formulirs.map((formulir, index) => {
-            return {
-                judulFormulir: formulir.judulFormulir,
-                isi: {
-                    teks: formulir.isi, 
-                    gambar: gambarFiles[index] ? gambarFiles[index].path : null // Path file gambar
-                }
-            };
-        });
+        const { user_id, judul, formulirs } = req.body;
 
         const proposal = new Proposal({
             user_id,
             judul,
-            formulirs: formulirArray
+            formulirs // Menggunakan formulirs langsung, karena formulirs sudah dalam bentuk array objek
         });
 
         await proposal.save();
