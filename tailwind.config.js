@@ -13,7 +13,13 @@ module.exports = {
       fontFamily: {
         nunito: ['Nunito', 'sans-serif'],
       },
-    },
+      textShadow: {
+        'default': '0 2px 4px rgba(0, 0, 0, 0.2)',
+        'md': '0 3px 6px rgba(0, 0, 0, 0.3)',
+        'lg': '0 4px 8px rgba(0, 0, 0, 0.4)',
+      },
   },
   plugins: [],
 }
+
+};

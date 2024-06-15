@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { UserIcon } from '@heroicons/react/24/solid';
+import { UserIcon } from '@heroicons/react/solid';
 
 const messages = [
   {

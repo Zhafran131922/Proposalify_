@@ -13,7 +13,7 @@ const LivePreview2 = ({ formData }) => {
         const formattedLine = parseHTML(line);
         doc.setFont(formattedLine.font, formattedLine.style);
         doc.text(formattedLine.text, 10, y);
-        y += doc.getTextDimensions(formattedLine.text).h; // Menambahkan tinggi teks
+        y += doc.getTextDimensions(formattedLine.text).h; 
       });
       if (Array.isArray(form.images)) {
         form.images.forEach((image, imageIndex) => {
@@ -40,19 +40,18 @@ const LivePreview2 = ({ formData }) => {
         const tagName = node.tagName.toLowerCase();
         switch (tagName) {
           case 'strong':
-            // Jika teks berada di dalam tag <strong>, atur style menjadi cetakan tebal (bold)
+
             result.style = 'bold';
-            // Rekursif untuk memproses lebih dalam jika ada lebih banyak tag dalam tag
+
             result.text += parseHTML(node.innerHTML).text;
             break;
           case 'em':
-            // Jika teks berada di dalam tag <em>, atur style menjadi miring (italic)
+
             result.style = 'italic';
-            // Rekursif untuk memproses lebih dalam jika ada lebih banyak tag dalam tag
-            result.text += parseHTML(node.innerHTML).text;
+
+           result.text += parseHTML(node.innerHTML).text;
             break;
           default:
-            // Jika ada tag lain, terus proses rekursif untuk menelusuri lebih dalam
             result.text += parseHTML(node.innerHTML).text;
             break;
         }

@@ -1,62 +1,56 @@
-// context/AuthContext.tsx
-
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, User, signOut } from 'firebase/auth';
-import app from '@/app/firebase';
-import DefaultProfileIcon from '../../components/DefaultProfileIcon';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import Axios from 'axios';
+import DefaultProfileIcon from '../../components/DefaultProfileIcon'; // Sesuaikan jalur impor
 
 interface AuthContextProps {
   children: ReactNode;
 }
 
-interface AuthContextValue {
-  user: User | null;
-  userProfileIcon: React.ReactNode;
-  signOutUser: () => Promise<void>; // Tambahkan properti signOutUser
+interface User {
+  email: string;
+  photoURL?: string;
 }
 
-const auth = getAuth(app);
+interface AuthContextValue {
+  user: User | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({ children }: AuthContextProps) {
+export const AuthProvider = ({ children }: AuthContextProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [userProfileIcon, setUserProfileIcon] = useState<React.ReactNode>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-      setUser(authUser);
-  
-      if (authUser && authUser.photoURL) {
-        console.log("User Photo URL:", authUser.photoURL);
-        setUserProfileIcon(<img src={authUser.photoURL} alt="Profile" className="h-6 w-6 rounded-full" />);
-      } else {
-        setUserProfileIcon(<DefaultProfileIcon />);
-      }
-    });
-  
-    return () => unsubscribe();
-  }, []);
-  
-  const signOutUser = async () => {
-    await signOut(auth);
+  const login = async (email: string, password: string) => {
+    try {
+      const response = await Axios.post('http://localhost:5000/api/auth/login/user', {
+        email,
+        password,
+      });
+      setUser({ email, photoURL: response.data.photoURL });
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
-  const contextValue: AuthContextValue = {
+  const logout = () => {
+    setUser(null);
+  };
+
+  const value: AuthContextValue = {
     user,
-    userProfileIcon,
-    signOutUser, 
+    login,
+    logout,
   };
 
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-
   return context;
-}
+};

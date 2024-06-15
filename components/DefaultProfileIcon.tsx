@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 
 const DefaultProfileIcon = () => {
-  return <FontAwesomeIcon icon={faUser} className="h-6 w-6 rounded-full" />;
+  return <InsertEmoticonIcon fontSize="large" />;
 };
 
 export default DefaultProfileIcon;

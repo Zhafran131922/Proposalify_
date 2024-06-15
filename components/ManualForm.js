@@ -9,6 +9,13 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 
 const ProposalForm = ({ setProposalData, setPreviewData }) => {
+  const [ lihat, setLihat ] = useState('');
+
+  useEffect(() => {
+    console.log(lihat)
+    
+  },[lihat])
+  
   const [forms, setForms] = useState([
     { judul: 'Latar Belakang', latarbelakang: '' },
     { judul: 'Deskripsi Usaha', latarbelakang: '' },
@@ -241,13 +248,15 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     doc.save('proposal.pdf');
   };
   
-  
-  
-
   const handleSubmit = () => {
     console.log(forms);
     console.log(images);
   };
+
+  const printLihat = (formIndex, value) => {
+    setLihat(value)
+    handleQuillChange(formIndex, value)
+  }
 
   return (
     <div className="mt-8">
@@ -273,8 +282,6 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
                  exit={{ opacity: 0, y: -20 }}
                  transition={{ duration: 0.3 }}
                >
-        
- 
     <h2 className="text-lg font-medium mb-2">Bagian {formIndex + 1}</h2>
     <div className="mb-4">
       <input
@@ -288,7 +295,7 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
       <ReactQuill
         ref={(el) => (quillRefs.current[formIndex] = el)}
         value={form.latarbelakang || ''}
-        onChange={(value) => handleQuillChange(formIndex, value)}
+        onChange={(value) => printLihat(formIndex, value)}
         placeholder="Isi"
         modules={modules}
         formats={formats}

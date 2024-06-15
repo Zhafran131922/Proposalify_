@@ -5,6 +5,23 @@
 /* styles/globals.css */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;700&display=swap');
 
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .text-shadow-md {
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  }
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+}
+
 .font-micro5 {
   font-family: 'Micro 5', sans-serif;
 }
+
+.text-justify {
+  text-align: justify;
+}
+
