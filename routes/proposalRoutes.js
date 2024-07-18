@@ -37,10 +37,22 @@ router.post('/upload', upload.single('gambar'), (req, res, next) => {
     try {
         const { user_id, judul, formulirs } = req.body;
 
+        // Validate and parse formulirs if necessary
+        let parsedFormulirs;
+        if (typeof formulirs === 'string') {
+            try {
+                parsedFormulirs = JSON.parse(formulirs);
+            } catch (e) {
+                return res.status(400).json({ message: 'Invalid formulirs format' });
+            }
+        } else {
+            parsedFormulirs = formulirs;
+        }
+
         const proposal = new Proposal({
             user_id,
             judul,
-            formulirs // Menggunakan formulirs langsung, karena formulirs sudah dalam bentuk array objek
+            formulirs: parsedFormulirs // Use the parsed array
         });
 
         await proposal.save();
@@ -51,6 +63,18 @@ router.post('/upload', upload.single('gambar'), (req, res, next) => {
     }
 });
 
+
+router.get('/proposals/:id', async (req, res) => {
+    try {
+        const proposal = await Proposal.findById(req.params.id);
+        if (!proposal) {
+            return res.status(404).json({ message: 'Proposal not found' });
+        }
+        res.status(200).json(proposal);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 router.post('/send-proposal-to-admin', async (req, res) => {
     try {
