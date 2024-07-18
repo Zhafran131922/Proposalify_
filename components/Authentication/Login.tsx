@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Axios from "axios"; // Import Axios
 import { useNavigate } from "react-router-dom";
-import AuthButton from "../components/AuthButton";
+import AuthButton from "./AuthButton";
 import { useRouter } from 'next/router';
 import { useAuth } from '@/app/AuthContext';
 
@@ -12,7 +12,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await Axios.post("http://localhost:5000/api/auth/login/user", {

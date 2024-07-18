@@ -20,19 +20,19 @@ const MyProposal = () => {
         },
         {
             title: "Teknik Visualisasi Ruang 3D Nyata",
-            lastUpdate: new Date("2023-07-26T08:22:00"),
+            lastUpdate: new Date("2023-7-26T08:22:00"),
             status: "Denied",
             statusColor: "bg-red-100 text-red-800"
         },
         {
             title: "Smart Farming System",
-            lastUpdate: new Date("2022-07-26T08:22:00"),
+            lastUpdate: new Date("2022-7-26T08:22:00"),
             status: "Accepted",
             statusColor: "bg-green-100 text-green-800"
         },
         {
             title: "Pengenalan Manajemen Jaringan pada SMKN 3 Jepara",
-            lastUpdate: new Date("2021-07-26T08:22:00"),
+            lastUpdate: new Date("2021-7-26T08:22:00"),
             status: "Sended",
             statusColor: "bg-yellow-100 text-yellow-800"
         }

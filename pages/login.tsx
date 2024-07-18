@@ -1,5 +1,5 @@
 import Navbar from '../components/Navbar';
-import Login from '../components/Login';
+import Login from '../components/Authentication/Login';
 import '../styles/globals.css';
 
 const LoginPage = () => {

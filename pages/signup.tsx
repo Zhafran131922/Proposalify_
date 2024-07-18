@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import SignUp from '../components/Register';
+import SignUp from '../components/Authentication/Register';
 import { app } from '../src/app/firebase'; // Import instance Firebase
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 

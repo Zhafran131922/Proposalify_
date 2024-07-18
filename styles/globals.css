@@ -25,3 +25,11 @@
   text-align: justify;
 }
 
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+
+

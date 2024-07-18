@@ -60,7 +60,7 @@ const Navbar = () => {
         {isLoggedIn && ( // Menampilkan menu pengguna jika pengguna berhasil login
           <motion.li initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} whileHover={{ backgroundColor: '#1A91F0', transition: { duration: 0.1 } }} whileTap={{ scale: 0.9 }} className="ml-auto hover:text-white transition duration-300 ease-in-out rounded" style={{ cursor: 'pointer', display: 'flex' }}>
             <div className="relative">
-              {user.photoURL ? (
+              {user && user.photoURL ? ( // Tambahkan pemeriksaan null pada user
                 <Image src={user.photoURL} alt="Profile" width={40} height={40} className="rounded-full" />
               ) : (
                 <InsertEmoticonIcon fontSize="large" />
