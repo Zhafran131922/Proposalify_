@@ -5,6 +5,7 @@ import AuthButton from "./AuthButton";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore'; // Import firestore module
+import { googleProvider } from "@/app/firebase";
 
 
 const Register = () => {
@@ -21,7 +22,7 @@ const Register = () => {
       setNumberPhoneError("No. Hp yang anda masukan kurang dari 11 digit")
     } else {
         setNumberPhoneError("");
-        history.push("/proposal");
+        router.push("/proposal");
     }
     
     // Implement registration logic using Firebase auth.createUserWithEmailAndPassword
@@ -54,6 +55,13 @@ const handleGoogleSignIn = async () => {
   } catch (error) {
     console.error('Error during Google sign-in:', error);
   }
+};
+
+const googleAuth = () => {
+  window.open(
+    `http://localhost:5000/auth/google/callback`,
+    "_self"
+  );
 };
 
 
@@ -128,7 +136,7 @@ const handleGoogleSignIn = async () => {
           </div>
 
           <button
-              onClick={handleGoogleSignIn}
+              onClick={googleAuth}
               className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300 w-full mt-4"
             >
               Daftar dengan Google
