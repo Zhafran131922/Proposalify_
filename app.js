@@ -8,9 +8,13 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const adminRoutes = require('./routes/adminRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const googleRoutes = require('./routes/googleRoutes');
 const reviewProposalRoutes = require('./routes/reviewProposalRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 const proposalController = require('./controllers/proposalController');
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const cookieSession = require("cookie-session");
 
 
 const multer = require('multer');
@@ -59,6 +63,47 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(authenticateUser);
 
+// passport untuk connect ke client id google
+passport.use(
+	new GoogleStrategy(
+		{
+			clientID: process.env.CLIENT_ID,
+			clientSecret: process.env.CLIENT_SECRET,
+			callbackURL: "/auth/google/callback",
+			scope: ["profile", "email"],
+		},
+		function (accessToken, refreshToken, profile, callback) {
+			callback(null, profile);
+		}
+	)
+);
+
+passport.serializeUser((user, done) => {
+	done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+	done(null, user);
+});
+
+app.use(
+	cookieSession({
+		name: "session",
+		keys: ["cyberwolve"],
+		maxAge: 24 * 60 * 60 * 100,
+	})
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+	cors({
+		origin: "http://localhost:3000",
+		methods: "GET,POST,PUT,DELETE",
+		credentials: true,
+	})
+);
 
 // Connect to MongoDB
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -74,6 +119,7 @@ const authController = require('./controllers/authController');
 
 
 app.use('/api/auth', authRoutes);
+app.use('/auth', googleRoutes);
 app.use('/api/proposals', proposalRoutes);
 app.use('/api/users', userRoutes);
 app.post('/api/admin/register-dosen', authController.registerDosen);
