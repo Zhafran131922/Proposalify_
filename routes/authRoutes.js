@@ -94,11 +94,18 @@ router.post('/login/user', async (req, res) => {
 
         const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(200).json({ message: 'Login berhasil', token, role: user.role });
+        res.status(200).json({ 
+            message: 'Login berhasil', 
+            token, 
+            role: user.role,
+            name: user.username,  // Sertakan nama
+            email: user.email // Sertakan email
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 router.post('/admin/register-dosen', roleMiddleware('administrator'), authController.registerDosen);
