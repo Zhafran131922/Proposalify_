@@ -32,8 +32,10 @@ const Login = () => {
       // Arahkan pengguna berdasarkan peran mereka
       if (role === 'admin') {
         router.push('/useradmin');
+      } else if (role == 'dosen') {
+        router.push('/pagedosen');
       } else {
-        router.push('/userdash');
+        router.push('/userdash')
       }
     } catch (error) {
       // Tangani error, misalnya tampilkan pesan kepada pengguna bahwa login gagal

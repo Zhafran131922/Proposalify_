@@ -30,9 +30,10 @@ const Register = () => {
           email,
           password
         });
-        // Jika login berhasil, Anda dapat mengarahkan pengguna ke halaman yang sesuai
-        const userHomePage = '/userdash'; // Tentukan halaman yang ingin Anda arahkan setelah login berhasil
-        router.push(userHomePage);
+        alert('Pendaftaran berhasil, silakan login ulang.');
+        setTimeout(() => {
+          router.push('/login');
+        }, 1500);
       } catch (error) {
         // Tangani error, misalnya tampilkan pesan kepada pengguna bahwa login gagal
         console.error("Login failed:", error);
