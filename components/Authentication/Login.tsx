@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Axios from "axios"; // Import Axios
-import { useNavigate } from "react-router-dom";
-import AuthButton from "./AuthButton";
 import { useRouter } from 'next/router';
 import { useAuth } from '@/app/AuthContext';
+import AuthButton from "./AuthButton";
 
 const Login = () => {
   const router = useRouter();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // State for error message
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,12 +19,17 @@ const Login = () => {
         email,
         password
       });
+      const role = response.data.role
       // Jika login berhasil, Anda dapat mengarahkan pengguna ke halaman yang sesuai
-      const userHomePage = '/userdash'; // Tentukan halaman yang ingin Anda arahkan setelah login berhasil
-      router.push(userHomePage);
+      if (role == 'user'){// Tentukan halaman yang ingin Anda arahkan setelah login berhasil
+        router.push('/userdash');
+      } else {
+        router.push('/useradmin');
+      }
     } catch (error) {
       // Tangani error, misalnya tampilkan pesan kepada pengguna bahwa login gagal
       console.error("Login failed:", error);
+      setErrorMessage('Email atau kata sandi salah.'); // Set error message
     }
   };
 
@@ -37,7 +42,7 @@ const Login = () => {
       className="max-w-md mx-auto mt-16 p-8 bg-white rounded shadow-md">
       <h1 className="text-3xl font-bold">Login</h1>
       <p className="mb-5 text-sm">Hai, Selamat Datang di Proposalify</p>
-      <div className="" >
+      <div className="">
         <div>
           <AuthButton/>
         </div>
@@ -45,6 +50,11 @@ const Login = () => {
       <div className="border-t border-gray-300 text-center my-6">
         <span className="bg-white px-2 text-gray-600 font-semibold">Or</span>
       </div>
+      {errorMessage && ( // Display error message if exists
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <span className="block sm:inline">{errorMessage}</span>
+        </div>
+      )}
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-600 w-full">
@@ -87,11 +97,9 @@ const Login = () => {
         </button>
       </form>
       <div className="mt-4 text-center">
-        <p>Belum punya akun? <a href="#daftar">Daftar</a></p>
+        <p>Belum punya akun? <a href="/signup">Daftar</a></p>
       </div>
-      <div className="mt-4">
-      
-      </div>
+      <div className="mt-4"></div>
     </motion.div>
   );
 };

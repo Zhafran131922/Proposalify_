@@ -17,9 +17,17 @@ const AuthButton = () => {
     }
   };
 
+  
+  const googleAuth = () => {
+    window.open(
+      `http://localhost:5000/auth/google/callback`,
+      "_self"
+    );
+  };
+
   return (
     <button
-      onClick={handleGoogleLogin}
+      onClick={googleAuth}
       className="bg-white text-black w-full border border-gray-600 rounded-full py-2 px-4"
       style={{ borderRadius: "5px" }}
     >
