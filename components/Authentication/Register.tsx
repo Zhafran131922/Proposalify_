@@ -5,26 +5,43 @@ import AuthButton from "./AuthButton";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore'; // Import firestore module
+import { googleProvider } from "@/app/firebase";
+import  Axios from "axios";
 
 
 const Register = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [numberPhone, setNumberPhone] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [numberPhoneError, setNumberPhoneError] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter(); 
 
-  const handleRegister = (e : React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(numberPhone.length !== 11) {
-      setNumberPhoneError("No. Hp yang anda masukan kurang dari 11 digit")
+    if(numberPhone.length >= 13 || numberPhone.length <= 11) {
+      setNumberPhoneError("No. Hp yang anda masukan kurang")
     } else {
-        setNumberPhoneError("");
-        history.push("/proposal");
+      try {
+        const response = await Axios.post("http://localhost:5000/api/auth/register/user", {
+          username,
+          email,
+          password
+        });
+        alert('Pendaftaran berhasil, silakan login ulang.');
+        setTimeout(() => {
+          router.push('/login');
+        }, 1500);
+      } catch (error) {
+        // Tangani error, misalnya tampilkan pesan kepada pengguna bahwa login gagal
+        console.error("Login failed:", error);
+        setErrorMessage('Gagal menambahkan akun, '+error); // Set error message
+      }
     }
     
-    // Implement registration logic using Firebase auth.createUserWithEmailAndPassword
+    
   };
 
   
@@ -56,6 +73,13 @@ const handleGoogleSignIn = async () => {
   }
 };
 
+const googleAuth = () => {
+  window.open(
+    `http://localhost:5000/auth/google/callback`,
+    "_self"
+  );
+};
+
 
 // Gunakan fungsi handleGoogleSignIn di dalam form atau sebagai opsi registrasi
 
@@ -70,8 +94,21 @@ const handleGoogleSignIn = async () => {
     >
       <h1 className="text-4xl font-semibold mb-6 text-center">Selamat Datang di
         Proposalify</h1>
-        <p className="text-center font-medium mb-3 text-sm">Sudah Punya Akun? Login</p>
+        <p className="text-center font-medium mb-3 text-sm">Sudah Punya Akun? <a href="/login">Login</a></p>
       <form onSubmit={handleRegister} className="space-y-4">
+        <div>
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="budi_santoso"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="mt-1 p-2 w-full border rounded-md"
+          />
+        </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
@@ -128,7 +165,7 @@ const handleGoogleSignIn = async () => {
           </div>
 
           <button
-              onClick={handleGoogleSignIn}
+              onClick={googleAuth}
               className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition duration-300 w-full mt-4"
             >
               Daftar dengan Google
