@@ -20,11 +20,20 @@ const Login = () => {
         password
       });
       const role = response.data.role
-      // Jika login berhasil, Anda dapat mengarahkan pengguna ke halaman yang sesuai
-      if (role == 'user'){// Tentukan halaman yang ingin Anda arahkan setelah login berhasil
-        router.push('/userdash');
-      } else {
+      const name = response.data.name
+      const token = response.data.token
+      const resEmail = response.data.email
+
+      // Save token, name, and email to local storage or context if needed
+      localStorage.setItem('token', token);
+      localStorage.setItem('name', name);
+      localStorage.setItem('email', resEmail);
+
+      // Arahkan pengguna berdasarkan peran mereka
+      if (role === 'admin') {
         router.push('/useradmin');
+      } else {
+        router.push('/userdash');
       }
     } catch (error) {
       // Tangani error, misalnya tampilkan pesan kepada pengguna bahwa login gagal
@@ -97,7 +106,7 @@ const Login = () => {
         </button>
       </form>
       <div className="mt-4 text-center">
-        <p>Belum punya akun? <a href="/signup">Daftar</a></p>
+        <p>Belum punya akun? <a href="#daftar">Daftar</a></p>
       </div>
       <div className="mt-4"></div>
     </motion.div>
