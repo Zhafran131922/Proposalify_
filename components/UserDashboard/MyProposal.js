@@ -1,42 +1,38 @@
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Axios from 'axios';
 
-const MyProposal = () => {
+const MyProposal = ({ userId }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('Title');
     const [sortDirection, setSortDirection] = useState('asc');
     const [hovered, setHovered] = useState(false);
+    const [proposals, setProposals] = useState([]);
 
-    const proposals = [
-        {
-            title: "Implementasi Augment Reality pada Kebudayaan Indonesia",
-            lastUpdate: new Date("2024-07-26T08:22:00"),
-            status: "On Progress",
-            statusColor: "bg-blue-100 text-blue-800"
-        },
-        {
-            title: "Teknik Visualisasi Ruang 3D Nyata",
-            lastUpdate: new Date("2023-7-26T08:22:00"),
-            status: "Denied",
-            statusColor: "bg-red-100 text-red-800"
-        },
-        {
-            title: "Smart Farming System",
-            lastUpdate: new Date("2022-7-26T08:22:00"),
-            status: "Accepted",
-            statusColor: "bg-green-100 text-green-800"
-        },
-        {
-            title: "Pengenalan Manajemen Jaringan pada SMKN 3 Jepara",
-            lastUpdate: new Date("2021-7-26T08:22:00"),
-            status: "Sended",
-            statusColor: "bg-yellow-100 text-yellow-800"
-        }
-    ];
+    useEffect(() => {
+        const fetchProposals = async () => {
+            try {
+                const response = await Axios.get(`http://localhost:5000/api/proposals/saved-proposals/${userId}`);
+                const proposalsData = response.data;
+                const transformedProposals = proposalsData.map(proposal => ({
+                    title: proposal.judul,
+                    lastUpdate: new Date(), // Set to current date
+                    status: "On Progress", // Update this according to your actual status
+                    statusColor: "bg-blue-100 text-blue-800" // Update this according to your actual status color logic
+                }));
+
+                setProposals(transformedProposals);
+            } catch (error) {
+                console.error('Failed to fetch proposals:', error);
+            }
+        };
+
+        fetchProposals();
+    }, [userId]);
 
     const filteredProposals = proposals.filter(proposal =>
         proposal.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -67,6 +63,11 @@ const MyProposal = () => {
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
+    };
+
+    const handleCellClick = (status) => {
+        console.log('Status clicked:', status);
+        // Add your logic to handle cell click if needed
     };
 
     return (
@@ -107,7 +108,7 @@ const MyProposal = () => {
                         }
                     `}</style>
                     <div className="flex flex-col items-start">
-                        <label className="text-gray-600 ">Sort by</label>
+                        <label className="text-gray-600">Sort by</label>
                         <motion.select
                             value={sortBy}
                             onChange={(e) => handleSortChange(e.target.value)}
@@ -124,10 +125,10 @@ const MyProposal = () => {
                 </div>
             </div>
             <Box
-                sx={{ 
-                    position: 'relative', 
+                sx={{
+                    position: 'relative',
                     display: 'inline-block',
-                    marginTop: '25px', 
+                    marginTop: '25px',
                     marginBottom: '-20px',
                 }}
                 onMouseEnter={() => setHovered(true)}
@@ -150,11 +151,11 @@ const MyProposal = () => {
                             color="primary"
                             aria-label="add"
                             style={{
-                                width: '40px', 
-                                height: '40px', 
+                                width: '40px',
+                                height: '40px',
                                 boxShadow: 'none',
                                 background: hovered ? 'white' : '#1A91F0',
-                                borderRadius: '50%', 
+                                borderRadius: '50%',
                             }}
                         >
                             <motion.div
@@ -166,7 +167,7 @@ const MyProposal = () => {
                                     },
                                 }}
                             >
-                                <AddIcon style={{ fontSize: 24, color: hovered ? '#1A91F0' : 'white' }} /> 
+                                <AddIcon style={{ fontSize: 24, color: hovered ? '#1A91F0' : 'white' }} />
                             </motion.div>
                         </Fab>
                     </Link>
@@ -212,15 +213,15 @@ const MyProposal = () => {
                                 </div>
                             </th>
                             <th className="py-4 px-4 bg-white text-left text-sm font-bold text-gray-600">
-                            <div className="flex items-center justify-between cursor-pointer" onClick={() => handleSortChange('LastUpdate')}>
-                                Last Update
-                                {sortBy === 'LastUpdate' && (
-                                    <span className="ml-1">
-                                        {sortDirection === 'asc' ? '↑' : '↓'}
-                                    </span>
-                                )}
-                            </div>
-                        </th>
+                                <div className="flex items-center justify-between cursor-pointer" onClick={() => handleSortChange('LastUpdate')}>
+                                    Last Update
+                                    {sortBy === 'LastUpdate' && (
+                                        <span className="ml-1">
+                                            {sortDirection === 'asc' ? '↑' : '↓'}
+                                        </span>
+                                    )}
+                                </div>
+                            </th>
                             <th className="py-4 px-4 bg-white text-left text-sm font-bold text-gray-600">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => handleSortChange('Status')}>
                                     Status

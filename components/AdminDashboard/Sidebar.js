@@ -13,9 +13,9 @@ const Sidebar = ({ setActiveComponent, activeComponent }) => {
     visible: { opacity: 1, x: 0 }
   };
   const user = {
-    name : localStorage.getItem('name'),
-    token : localStorage.getItem('token'),
-    email : localStorage.getItem('email'),
+    name : sessionStorage.getItem('username'),
+    token : sessionStorage.getItem('token'),
+    email : sessionStorage.getItem('email'),
   }
 
   return (

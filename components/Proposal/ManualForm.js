@@ -4,18 +4,16 @@ import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
 import { toPng } from 'html-to-image';
 import { motion } from 'framer-motion';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
+
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
-
 const ProposalForm = ({ setProposalData, setPreviewData }) => {
-  const [ lihat, setLihat ] = useState('');
-
-  useEffect(() => {
-    console.log(lihat)
-    
-  },[lihat])
-  
+  const router = useRouter();
+  const [lihat, setLihat] = useState('');
   const [forms, setForms] = useState([
     { judul: 'Latar Belakang', latarbelakang: '' },
     { judul: 'Deskripsi Usaha', latarbelakang: '' },
@@ -23,15 +21,12 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     { judul: 'Lampiran', latarbelakang: '' },
     { judul: 'Penutup', latarbelakang: '' },
   ]);
-  const [images, setImages] = useState([]);
   const [judulProposal, setJudulProposal] = useState('');
-  const [latarBelakang, setLatarBelakang] = useState('');
   const quillRefs = useRef(Array(forms.length).fill(null).map(() => React.createRef()));
 
-
   useEffect(() => {
-    setPreviewData({ judulProposal });
-  }, [judulProposal, setPreviewData]);
+    setPreviewData({ judulProposal, forms });
+  }, [judulProposal, forms, setPreviewData]);
 
   useEffect(() => {
     quillRefs.current = quillRefs.current.slice(0, forms.length);
@@ -40,7 +35,6 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
   const updatePreviewData = () => {
     const formData = {
       judulProposal,
-      latarBelakang,
       forms,
     };
     setPreviewData(formData);
@@ -77,7 +71,6 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     updatePreviewData();
   };
 
-
   const handleQuillChange = (formIndex, value) => {
     const updatedForms = [...forms];
     updatedForms[formIndex].latarbelakang = value;
@@ -89,21 +82,21 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     if (index > 0) {
       setForms((prevForms) => {
         const newForms = [...prevForms];
-        const temp = { ...newForms[index] }; // Salin nilai latarbelakang
-        newForms[index] = { ...newForms[index - 1] }; // Salin formulir yang akan ditukar tempat
-        newForms[index - 1] = temp; // Kembalikan nilai latarbelakang yang disalin
+        const temp = { ...newForms[index] };
+        newForms[index] = { ...newForms[index - 1] };
+        newForms[index - 1] = temp;
         return newForms;
       });
     }
   };
-  
+
   const moveFormDown = (index) => {
     if (index < forms.length - 1) {
       setForms((prevForms) => {
         const newForms = [...prevForms];
-        const temp = { ...newForms[index] }; // Salin nilai latarbelakang
-        newForms[index] = { ...newForms[index + 1] }; // Salin formulir yang akan ditukar tempat
-        newForms[index + 1] = temp; // Kembalikan nilai latarbelakang yang disalin
+        const temp = { ...newForms[index] };
+        newForms[index] = { ...newForms[index + 1] };
+        newForms[index + 1] = temp;
         return newForms;
       });
     }
@@ -248,103 +241,121 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     doc.save('proposal.pdf');
   };
   
-  const handleSubmit = () => {
-    console.log(forms);
-    console.log(images);
-  };
+  const handleSubmit = async () => {
+    const dataToSend = {
+        user_id: sessionStorage.getItem('userId'),
+        judul: judulProposal,
+        formulirs: forms.map(form => ({
+            judulFormulir: form.judul,
+            isi: form.latarbelakang,
+        })),
+    };
 
-  const printLihat = (formIndex, value) => {
-    setLihat(value)
-    handleQuillChange(formIndex, value)
-  }
+    try {
+        const response = await fetch('http://localhost:5000/api/proposals/proposals/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend),
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const responseData = await response.json();
+        console.log('Response data:', responseData);
+        toast.success('Proposal submitted successfully!');
+        router.push('/userdash');
+    } catch (error) {
+        console.error('Error submitting form data:', error);
+        toast.error('Error submitting form data. Please try again.');
+    }
+};
 
   return (
     <div className="mt-8">
-      <h1 className="text-2xl font-semibold mb-4">Proposal Form</h1>
-      <div className="mb-6 p-4 border rounded">
-        <h2 className="text-lg font-medium mb-2">Judul Proposal</h2>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-4">Form Proposal</h1>
+        <div>
+          <button
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            onClick={handleDownloadPDF}
+          >
+            Download PDF
+          </button>
+        </div>
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="judulProposal">
+          Judul Proposal
+        </label>
         <input
           type="text"
-          name="judulProposal"
+          id="judulProposal"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           value={judulProposal}
           onChange={handleJudulChange}
-          placeholder="Judul Proposal"
-          className="border border-gray-300 rounded-md p-2 w-full"
         />
       </div>
-      
-      {forms.map((form, formIndex) => (
-                 <motion.div
-                 key={formIndex}
-                 className="mb-6 p-4 border rounded"
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 exit={{ opacity: 0, y: -20 }}
-                 transition={{ duration: 0.3 }}
-               >
-    <h2 className="text-lg font-medium mb-2">Bagian {formIndex + 1}</h2>
-    <div className="mb-4">
-      <input
-        type="text"
-        value={form.judul}
-        onChange={(e) => handleFormChange(formIndex, 'judul', e.target.value)}
-        placeholder="Judul Bagian Proposal"
-        name="judul"
-        className="border border-gray-300 rounded-md p-2 mr-2 w-full"
-      />
-      <ReactQuill
-        ref={(el) => (quillRefs.current[formIndex] = el)}
-        value={form.latarbelakang || ''}
-        onChange={(value) => printLihat(formIndex, value)}
-        placeholder="Isi"
-        modules={modules}
-        formats={formats}
-      />
-    </div>
-    <div className="flex justify-end space-x-2">
-      <button
-        onClick={() => moveFormUp(formIndex)}
-        disabled={formIndex === 0}
-        className={`py-2 px-4 rounded ${formIndex === 0 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-      >
-        ▲
-      </button>
-      <button
-        onClick={() => moveFormDown(formIndex)}
-        disabled={formIndex === forms.length - 1}
-        className={`py-2 px-4 rounded ${formIndex === forms.length - 1 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-      >
-        ▼
-      </button>
-    </div>
-          {formIndex > 4 && (
-      <button
-        onClick={() => removeForm(formIndex)}
-        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
-      >
-        Hapus Bagian
-      </button>
-    )}
-        </motion.div>
+      {forms.map((form, index) => (
+        <div key={index} className="mb-4">
+          <div className="flex items-center mb-2">
+            <input
+              type="text"
+              placeholder="Judul"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+              value={form.judul}
+              onChange={(e) => handleFormChange(index, 'judul', e.target.value)}
+            />
+            <button
+              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+              onClick={() => removeForm(index)}
+            >
+              Hapus
+            </button>
+          </div>
+          <ReactQuill
+            ref={quillRefs.current[index]}
+            value={form.latarbelakang}
+            onChange={(value) => handleQuillChange(index, value)}
+            modules={modules}
+            formats={formats}
+          />
+          <div className="flex justify-between mt-2">
+            <button
+              className="bg-gray-500 text-white py-1 px-2 rounded hover:bg-gray-600"
+              onClick={() => moveFormUp(index)}
+              disabled={index === 0}
+            >
+              Naik
+            </button>
+            <button
+              className="bg-gray-500 text-white py-1 px-2 rounded hover:bg-gray-600"
+              onClick={() => moveFormDown(index)}
+              disabled={index === forms.length - 1}
+            >
+              Turun
+            </button>
+          </div>
+        </div>
       ))}
-      <button
-        onClick={addForm}
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-2"
-      >
-        Tambah Bagian
-      </button>
-      <button
-        onClick={handleSubmit}
-        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-      >
-        Kirim
-      </button>
-      <button
-        onClick={handleDownloadPDF}
-        className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
-      >
-        Download PDF
-      </button>
+      <div className="flex justify-between">
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          onClick={addForm}
+        >
+          Tambah Formulir
+        </button>
+        <button
+          className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+          onClick={handleSubmit}
+        >
+          Kirim Data
+        </button>
+        <ToastContainer />
+      </div>
     </div>
   );
 };
