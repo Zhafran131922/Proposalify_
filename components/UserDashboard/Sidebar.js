@@ -7,22 +7,17 @@ import revisionActive from '../../images/revision-active.png';
 import tracking from '../../images/tracking.svg';
 import trackingActive from '../../images/tracking-active.png';
 
-const Sidebar = ({ setActiveComponent, activeComponent }) => {
+
+const Sidebar = ({ setActiveComponent, activeComponent, username }) => {
   const textVariants = {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0 }
   };
 
-  const user = {
-    name : localStorage.getItem('name'),
-    token : localStorage.getItem('token'),
-    email : localStorage.getItem('email'),
-  }
-
   return (
     <div className="bg-gray-900 w-64 h-screen top-24 left-0 overflow-y-auto">
       <div className="p-4">
-        <h2 className="text-white text-lg font-semibold mb-4">Hi, {user.name}</h2>
+        <h2 className="text-white text-lg font-semibold mb-4">Hi, {username}</h2>
         <ul className="space-y-2">
           <motion.li
             initial="hidden"

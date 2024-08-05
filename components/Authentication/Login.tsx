@@ -1,48 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Axios from "axios"; // Import Axios
 import { useRouter } from 'next/router';
 import { useAuth } from '@/app/AuthContext';
 import AuthButton from "./AuthButton";
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const router = useRouter();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // State for error message
+  const [errorMessage, setErrorMessage] = useState('');
+  const [role, setRole] = useState('');
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  
     try {
       const response = await Axios.post("http://localhost:5000/api/auth/login/user", {
         email,
         password
       });
-      const role = response.data.role
-      const name = response.data.name
-      const token = response.data.token
-      const resEmail = response.data.email
-
-      // Save token, name, and email to local storage or context if needed
-      localStorage.setItem('token', token);
-      localStorage.setItem('name', name);
-      localStorage.setItem('email', resEmail);
-
-      // Arahkan pengguna berdasarkan peran mereka
-      if (role === 'admin') {
-        router.push('/useradmin');
-      } else if (role == 'dosen') {
-        router.push('/pagedosen');
+      const token = response.data.token;
+  
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.userId;
+          sessionStorage.setItem('userId', userId);
+  
+          const userResponse = await Axios.get(`http://localhost:5000/api/users/users/${userId}`);
+          const user = userResponse.data;
+          setRole(user.role);
+  
+        } catch (error) {
+          console.error('Failed to decode token:', error);
+        }
       } else {
-        router.push('/userdash')
+        console.log('No token found');
       }
     } catch (error) {
-      // Tangani error, misalnya tampilkan pesan kepada pengguna bahwa login gagal
+      // Handle error
       console.error("Login failed:", error);
-      setErrorMessage('Email atau kata sandi salah.'); // Set error message
+      setErrorMessage('Email atau kata sandi salah.');
     }
   };
+  
+  // useEffect to handle navigation based on role
+  useEffect(() => {
+    if (role) {
+      if (role === 'admin') {
+        router.push('/useradmin');
+      } else if (role === 'dosen') {
+        router.push('/pagedosen');
+      } else if (role === 'user') {
+        router.push('/userdash');
+      } else {
+        console.log('Unknown role:', role);
+      }
+    }
+  }, [role]);
 
   return (
     <motion.div 
