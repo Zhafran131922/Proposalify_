@@ -10,6 +10,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const ProposalForm = ({ setProposalData, setPreviewData }) => {
   const router = useRouter();
   const [lihat, setLihat] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
   const [forms, setForms] = useState([]);
   const [judulProposal, setJudulProposal] = useState('');
   const quillRefs = useRef([]);
@@ -26,13 +27,11 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
           latarbelakang: form.isi
         }));
         setForms(initialForms);
-
-        // Initialize quillRefs with the number of forms
+        setIsEditing(true);
         quillRefs.current = initialForms.map(() => React.createRef());
         setPreviewData({ judulProposal: data.judul, forms: initialForms });
       } catch (error) {
         console.error('Error fetching data:', error);
-        toast.error('Error fetching data. Please try again.');
       }
     };
 
@@ -135,6 +134,37 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     'link', 'image'
   ];
 
+  const handleUpdate = async () => {
+    const dataToSend = {
+      judul: judulProposal,
+      formulirs: forms.map(form => ({
+        judulFormulir: form.judul,
+        isi: form.latarbelakang,
+      })),
+    };
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/proposals/${router.query.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+      toast.success('Proposal updated successfully!');
+      router.push('/userdash');
+    } catch (error) {
+      console.error('Error updating proposal:', error);
+      toast.error('Error updating proposal. Please try again.');
+    }
+  };
   const handleSubmit = async () => {
     const dataToSend = {
       user_id: localStorage.getItem('userId'),
@@ -217,20 +247,20 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
             modules={modules}
             formats={formats}
           />
-          <div className="flex justify-between mt-2">
+          <div className="flex justify-end mt-2 gap-2">
             <button
-              className="bg-gray-500 text-white py-1 px-2 rounded hover:bg-gray-600"
+              className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
               onClick={() => moveFormUp(index)}
               disabled={index === 0}
             >
-              Naik
+              ▲
             </button>
             <button
-              className="bg-gray-500 text-white py-1 px-2 rounded hover:bg-gray-600"
+              className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600"
               onClick={() => moveFormDown(index)}
               disabled={index === forms.length - 1}
             >
-              Turun
+              ▼
             </button>
           </div>
         </div>
@@ -244,9 +274,9 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
         </button>
         <button
           className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-          onClick={handleSubmit}
+          onClick={isEditing ? handleUpdate : handleSubmit}
         >
-          Kirim
+          Kirim Data
         </button>
       </div>
       <ToastContainer />
