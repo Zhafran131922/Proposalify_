@@ -5,8 +5,10 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Axios from 'axios';
+import { useRouter } from 'next/router';
 
 const MyProposal = ({ userId }) => {
+    const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('Title');
     const [sortDirection, setSortDirection] = useState('asc');
@@ -19,6 +21,7 @@ const MyProposal = ({ userId }) => {
                 const response = await Axios.get(`http://localhost:5000/api/proposals/saved-proposals/${userId}`);
                 const proposalsData = response.data;
                 const transformedProposals = proposalsData.map(proposal => ({
+                    _id: proposal._id,
                     title: proposal.judul,
                     lastUpdate: new Date(), // Set to current date
                     status: "On Progress", // Update this according to your actual status
@@ -65,9 +68,8 @@ const MyProposal = ({ userId }) => {
         setSearchTerm(e.target.value);
     };
 
-    const handleCellClick = (status) => {
-        console.log('Status clicked:', status);
-        // Add your logic to handle cell click if needed
+    const handleCellClick = (id) => {
+        router.push(`/proposal/${id}`);
     };
 
     return (
@@ -146,7 +148,7 @@ const MyProposal = ({ userId }) => {
                         },
                     }}
                 >
-                    <Link href="/manualproposal">
+                    <Link href="/proposal/0">
                         <Fab
                             color="primary"
                             aria-label="add"
@@ -236,7 +238,7 @@ const MyProposal = ({ userId }) => {
                     </thead>
                     <tbody>
                         {sortedProposals.map((proposal, index) => (
-                            <tr key={index} className="border-t hover:bg-gray-100 cursor-pointer" onClick={() => handleCellClick(proposal.status)}>
+                            <tr key={index} className="border-t hover:bg-gray-100 cursor-pointer" onClick={() => handleCellClick(proposal._id)}>
                                 <td className="py-2 px-4 text-sm text-gray-700">
                                     {proposal.title}
                                 </td>

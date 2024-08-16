@@ -28,7 +28,7 @@ const Login = () => {
         try {
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.userId;
-          sessionStorage.setItem('userId', userId);
+          localStorage.setItem('userId', userId);
   
           const userResponse = await Axios.get(`http://localhost:5000/api/users/users/${userId}`);
           const user = userResponse.data;

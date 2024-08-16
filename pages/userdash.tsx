@@ -12,9 +12,9 @@ const UserDash = () => {
   const router = useRouter();
   
   useEffect(() => {
-    const userId = sessionStorage.getItem('userId');
+    const userId = localStorage.getItem('userId');
     if (!userId) {
-      console.error('User ID not found in sessionStorage');
+      console.error('User ID not found in localStorage');
       router.push('/login'); // Redirect to login if user ID is not found
       return;
     }
@@ -35,11 +35,11 @@ const UserDash = () => {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'MyProposal':
-        return <MyProposal userId={sessionStorage.getItem('userId')} />;
+        return <MyProposal userId={localStorage.getItem('userId')} />;
       case 'Revision':
         return <Revision />;
       default:
-        return <MyProposal userId={sessionStorage.getItem('userId')} />;
+        return <MyProposal userId={localStorage.getItem('userId')} />;
     }
   };
 
