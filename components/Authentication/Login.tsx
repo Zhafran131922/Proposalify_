@@ -12,7 +12,6 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [role, setRole] = useState('');
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,45 +21,14 @@ const Login = () => {
         email,
         password
       });
-      const token = response.data.token;
-  
-      if (token) {
-        try {
-          const decodedToken = jwtDecode(token);
-          const userId = decodedToken.userId;
-          localStorage.setItem('userId', userId);
-  
-          const userResponse = await Axios.get(`http://localhost:5000/api/users/users/${userId}`);
-          const user = userResponse.data;
-          setRole(user.role);
-  
-        } catch (error) {
-          console.error('Failed to decode token:', error);
-        }
-      } else {
-        console.log('No token found');
-      }
+      localStorage.setItem("token", response.data.token);
+      router.push('/userdash');
     } catch (error) {
       // Handle error
       console.error("Login failed:", error);
       setErrorMessage('Email atau kata sandi salah.');
     }
   };
-  
-  // useEffect to handle navigation based on role
-  useEffect(() => {
-    if (role) {
-      if (role === 'admin') {
-        router.push('/useradmin');
-      } else if (role === 'dosen') {
-        router.push('/pagedosen');
-      } else if (role === 'user') {
-        router.push('/userdash');
-      } else {
-        console.log('Unknown role:', role);
-      }
-    }
-  }, [role]);
 
   return (
     <motion.div 

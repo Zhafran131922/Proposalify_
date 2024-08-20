@@ -18,7 +18,15 @@ const MyProposal = ({ userId }) => {
     useEffect(() => {
         const fetchProposals = async () => {
             try {
-                const response = await Axios.get(`http://localhost:5000/api/proposals/saved-proposals/${userId}`);
+                const token = localStorage.getItem('token'); // Adjust this based on where you store the token
+                const response = await Axios.get(
+                    `http://localhost:5000/api/proposals/saved-proposals/${userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 const proposalsData = response.data;
                 const transformedProposals = proposalsData.map(proposal => ({
                     _id: proposal._id,
@@ -27,15 +35,16 @@ const MyProposal = ({ userId }) => {
                     status: "On Progress", // Update this according to your actual status
                     statusColor: "bg-blue-100 text-blue-800" // Update this according to your actual status color logic
                 }));
-
+    
                 setProposals(transformedProposals);
             } catch (error) {
                 console.error('Failed to fetch proposals:', error);
             }
         };
-
+    
         fetchProposals();
     }, [userId]);
+    
 
     const filteredProposals = proposals.filter(proposal =>
         proposal.title.toLowerCase().includes(searchTerm.toLowerCase())

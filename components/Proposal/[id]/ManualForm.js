@@ -18,7 +18,7 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/proposals/proposals/${router.query.id}`);
+        const response = await fetch(`http://localhost:5000/api/proposals/${router.query.id}`);
         const data = await response.json();
         
         setJudulProposal(data.judul);
@@ -144,10 +144,13 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     };
 
     try {
+      const token = localStorage.getItem('token'); // Adjust this based on where you store the token
+
       const response = await fetch(`http://localhost:5000/api/proposals/${router.query.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Add the Bearer token here
         },
         body: JSON.stringify(dataToSend),
       });
@@ -165,6 +168,7 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
       toast.error('Error updating proposal. Please try again.');
     }
   };
+
   const handleSubmit = async () => {
     const dataToSend = {
       user_id: localStorage.getItem('userId'),
@@ -176,10 +180,12 @@ const ProposalForm = ({ setProposalData, setPreviewData }) => {
     };
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5000/api/proposals/proposals', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(dataToSend),
       });
